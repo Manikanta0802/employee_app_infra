@@ -23,3 +23,33 @@ variable "docker_image" {
   type        = string
   default     = ""
 }
+
+
+variable "backend_image" {
+  type = string
+}
+
+variable "frontend_image" {
+  type = string
+}
+
+variable "db_host" {
+  type = string
+}
+
+variable "db_port" {
+  type = number
+}
+
+variable "db_name" {
+  type = string
+}
+
+variable "db_user" {
+  type = string
+}
+
+variable "db_password" {
+  type = string
+  sensitive = true
+}

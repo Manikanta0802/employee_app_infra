@@ -11,7 +11,7 @@ systemctl start docker
 usermod -aG docker ec2-user
 
 # Backend
-docker pull ghcr.io/manikanta0802/employee-backend:5
+docker pull ${backend_image}
 docker stop employee-backend || true
 docker rm employee-backend || true
 docker run -d \
@@ -24,7 +24,7 @@ docker run -d \
   ${backend_image}
 
 # Frontend
-docker pull  ghcr.io/manikanta0802/employee-frontend:5
+docker pull ${frontend_image}
 docker stop employee-frontend || true
 docker rm employee-frontend || true
 docker run -d \

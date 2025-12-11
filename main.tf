@@ -40,8 +40,8 @@ module "ec2" {
   app_ami_id           = var.app_ami_id
   key_pair_name    = var.key_pair_name
 
-  backend_image = var.backend_image
-  frontend_image = var.frontend_image
+  backend_image = ghcr.io/manikanta0802/employee-backend:5
+  frontend_image = ghcr.io/manikanta0802/employee-frontend:5
 
   db_host     = module.rds.db_endpoint
   db_port     = 3306
