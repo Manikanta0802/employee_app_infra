@@ -8,7 +8,7 @@ variable "ec2_sg_id" {
   type        = string
 }
 
-variable "ami_id" {
+variable "app_ami_id" {
   description = "AMI ID for the EC2 app server"
   type        = string
 }
@@ -22,4 +22,34 @@ variable "docker_image" {
   description = "Docker image to run on EC2 (provided by CI/CD)"
   type        = string
   default     = ""
+}
+
+
+variable "backend_image" {
+  type = string
+}
+
+variable "frontend_image" {
+  type = string
+}
+
+variable "db_host" {
+  type = string
+}
+
+variable "db_port" {
+  type = number
+}
+
+variable "db_name" {
+  type = string
+}
+
+variable "db_user" {
+  type = string
+}
+
+variable "db_password" {
+  type = string
+  sensitive = true
 }

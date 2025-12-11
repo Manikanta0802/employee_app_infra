@@ -1,24 +1,21 @@
 resource "aws_instance" "app_server" {
-  ami                         = var.ami_id
-  instance_type               = "t2.micro"
+  ami                         = var.app_ami_id
+  instance_type               = "t3.micro"
   key_name                    = var.key_pair_name
   subnet_id                   = var.public_subnet_id
   vpc_security_group_ids      = [var.ec2_sg_id]
   associate_public_ip_address = true
 
-  user_data = <<-EOF
-              #!/bin/bash
-              yum update -y
-              yum install -y docker
-              systemctl enable docker
-              systemctl start docker
+    user_data = templatefile("${path.module}/userdata.sh", {
+    backend_image = var.backend_image
+    frontend_image = var.frontend_image
+    db_host       = var.db_host
+    db_port       = var.db_port
+    db_name       = var.db_name
+    db_user       = var.db_user
+    db_password   = var.db_password
+  })
 
-              # Pull and run app container if provided
-              if [ -n "${var.docker_image}" ]; then
-                docker pull ${var.docker_image}
-                docker run -d --restart always -p 8080:8080 ${var.docker_image}
-              fi
-              EOF
 
   tags = {
     Name = "app-server"

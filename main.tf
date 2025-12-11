@@ -37,10 +37,33 @@ module "ec2" {
   source           = "./modules/ec2"
   public_subnet_id = module.vpc.public_subnet_ids[0]
   ec2_sg_id        = module.security_groups.ec2_sg_id
-  ami_id           = var.ami_id
+  app_ami_id           = var.app_ami_id
   key_pair_name    = var.key_pair_name
+
+  backend_image = "ghcr.io/manikanta0802/employee-backend:5"
+  frontend_image = "ghcr.io/manikanta0802/employee-frontend:5"
+
+  db_host     = module.rds.rds_endpoint
+  db_port     = 3306
+  db_name     = "employee_availability"
+  db_user     = var.db_master_username
+  db_password = var.db_master_password
 }
 
+###############################
+# EC2 Monitor Server
+###############################
+module "monitor_ec2" {
+  source            = "./modules/monitor_ec2"
+  public_subnet_id  = module.vpc.public_subnet_ids[1]
+  monitor_sg_id     = module.security_groups.monitor_sg_id
+  monitor_ami_id            = var.monitor_ami_id
+  key_pair_name     = var.key_pair_name
+}
+
+###############################
+# ALB
+###############################
 module "alb" {
   source            = "./modules/alb"
   vpc_id            = module.vpc.vpc_id

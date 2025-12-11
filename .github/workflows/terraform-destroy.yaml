@@ -1,4 +1,4 @@
-name: Terraform Destroy (OIDC)
+name: Terraform Destroy
 
 on:
   workflow_dispatch:

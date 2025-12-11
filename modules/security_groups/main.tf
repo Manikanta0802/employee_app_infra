@@ -1,6 +1,3 @@
-# -----------------------------------
-# EC2 SG (SSH + App access)
-# -----------------------------------
 resource "aws_security_group" "ec2_sg" {
   name        = "mini_project_ec2_sg"
   description = "Allow SSH + App traffic to EC2"
@@ -37,9 +34,6 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
-# -----------------------------------
-# ALB SG (HTTP/HTTPS)
-# -----------------------------------
 resource "aws_security_group" "alb_sg" {
   name        = "mini_project_alb_sg"
   description = "Allow HTTP/HTTPS to ALB"
@@ -74,9 +68,7 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
-# -----------------------------------
-# RDS SG (MySQL only from EC2)
-# -----------------------------------
+
 resource "aws_security_group" "rds_sg" {
   name        = "mini_project_rds_sg"
   description = "Allow MySQL traffic from EC2 only"
@@ -100,5 +92,47 @@ resource "aws_security_group" "rds_sg" {
   tags = {
     Name    = "RDS-SG"
     Project = "MiniProject"
+  }
+}
+
+
+resource "aws_security_group" "monitor_sg" {
+  name        = "monitor-ec2-sg"
+  description = "Allow Prometheus, Grafana and SSH access"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "SSH Access"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.my_ip_cidr]
+  }
+
+  ingress {
+    description = "Grafana UI"
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Prometheus UI"
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "MiniProject_MonitorSG"
   }
 }

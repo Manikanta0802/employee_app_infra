@@ -1,0 +1,30 @@
+name: Reboot EC2 Instance
+
+on:
+  repository_dispatch:
+    types: [reboot-ec2]
+
+jobs:
+  reboot:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write     # required for OIDC
+      contents: read
+
+    steps:
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Reboot EC2
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=EmployeeAppServer" \
+            --query "Reservations[0].Instances[0].InstanceId" \
+            --output text)
+
+          echo "Rebooting: $INSTANCE_ID"
+          aws ec2 reboot-instances --instance-ids $INSTANCE_ID

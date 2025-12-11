@@ -25,7 +25,13 @@ variable "key_pair_name" {
   default     = "office-key"
 }
 
-variable "ami_id" {
+variable "app_ami_id" {
   type        = string
   default     = "ami-00ca570c1b6d79f36"
 }
+
+variable "monitor_ami_id" {
+  type        = string
+  default     = "ami-00ca570c1b6d79f36"
+}
+
