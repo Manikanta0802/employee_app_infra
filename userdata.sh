@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#testing
 echo "user_data" > /var/lib/cloud/instance/sem/config_scripts_user
 
 yum update -y
