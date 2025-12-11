@@ -43,7 +43,7 @@ module "ec2" {
   backend_image = "ghcr.io/manikanta0802/employee-backend:5"
   frontend_image = "ghcr.io/manikanta0802/employee-frontend:5"
 
-  db_host     = module.rds.db_endpoint
+  db_host     = module.rds.rds_endpoint
   db_port     = 3306
   db_name     = "employee_availability"
   db_user     = var.db_master_username
