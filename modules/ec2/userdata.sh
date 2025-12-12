@@ -14,31 +14,60 @@ sudo systemctl enable docker
 sudo systemctl start docker
 sudo usermod -aG docker ec2-user
 
-# Pull Backend Image
-sudo docker pull ${backend_image}
-sudo docker stop employee-backend || true
-sudo docker rm employee-backend || true
-sudo docker run -d \
+# Ensure SSM Agent is installed (Amazon Linux 2023 already has it)
+sudo systemctl enable amazon-ssm-agent
+sudo systemctl start amazon-ssm-agent
+
+# Create App Directory
+mkdir -p /opt/app
+chmod 755 /opt/app
+
+# Creating the deploy.sh script
+cat << 'EOF' > /opt/app/deploy.sh
+#!/bin/bash
+set -e
+
+echo "Starting Deployment at $(date)"
+
+# Env Vars passed from GitHub Actions:
+# GHCR_USER
+# GHCR_TOKEN
+# BACKEND_IMAGE
+# FRONTEND_IMAGE
+# DB_HOST / DB_USER / DB_PASS
+
+echo "Logging into GHCR..."
+echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+
+echo "Pulling backend image..."
+docker pull "$BACKEND_IMAGE"
+docker stop employee-backend || true
+docker rm employee-backend || true
+
+docker run -d \
   --name employee-backend \
   -p 8080:8080 \
-  -e SPRING_DATASOURCE_URL="jdbc:mysql://${db_host}:${db_port}/${db_name}" \
-  -e SPRING_DATASOURCE_USERNAME="${db_user}" \
-  -e SPRING_DATASOURCE_PASSWORD="${db_password}" \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://${DB_HOST}:3306/employee_availability" \
+  -e SPRING_DATASOURCE_USERNAME="${DB_USER}" \
+  -e SPRING_DATASOURCE_PASSWORD="${DB_PASS}" \
   --restart=always \
-  ${backend_image}
+  "$BACKEND_IMAGE"
 
-sudo docker pull ghcr.io/manikanta0802/employee-frontend:5
-sudo docker stop employee-frontend || true
-sudo docker rm employee-frontend || true
+echo "Pulling frontend image..."
+docker pull "$FRONTEND_IMAGE"
+docker stop employee-frontend || true
+docker rm employee-frontend || true
 
-# Pull Frontend Image
-sudo docker pull ${frontend_image}
-sudo docker stop employee-frontend || true
-sudo docker rm employee-frontend || true
-sudo docker run -d \
+docker run -d \
   --name employee-frontend \
   -p 80:80 \
   --restart=always \
-  ${frontend_image}
+  "$FRONTEND_IMAGE"
 
-echo "Finished user data script!"
+echo "Deployment completed at $(date)"
+EOF
+
+# Make deploy script executable
+chmod +x /opt/app/deploy.sh
+
+/opt/app/deploy.sh

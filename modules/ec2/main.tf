@@ -5,15 +5,18 @@ resource "aws_instance" "app_server" {
   subnet_id                   = var.public_subnet_id
   vpc_security_group_ids      = [var.ec2_sg_id]
   associate_public_ip_address = true
+  lifecycle {
+    recreate_before_destroy = true
+  }
 
-    user_data = templatefile("${path.module}/userdata.sh", {
-    backend_image = var.backend_image
-    frontend_image = var.frontend_image
-    db_host       = var.db_host
-    db_port       = var.db_port
-    db_name       = var.db_name
-    db_user       = var.db_user
-    db_password   = var.db_password
+  user_data = templatefile("${path.module}/userdata.sh", {
+  backend_image = var.backend_image
+  frontend_image = var.frontend_image
+  db_host       = var.db_host
+  db_port       = var.db_port
+  db_name       = var.db_name
+  db_user       = var.db_user
+  db_password   = var.db_password
   })
 
 
