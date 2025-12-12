@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      id-token: write     # required for OIDC
+      id-token: write
       contents: read
 
     steps:
@@ -19,12 +19,24 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Reboot EC2
+      - name: Get EC2 Instance ID
+        id: get_instance
         run: |
           INSTANCE_ID=$(aws ec2 describe-instances \
-            --filters "Name=tag:Name,Values=EmployeeAppServer" \
+            --filters "Name=tag:Name,Values=app-server" \
             --query "Reservations[0].Instances[0].InstanceId" \
             --output text)
 
-          echo "Rebooting: $INSTANCE_ID"
-          aws ec2 reboot-instances --instance-ids $INSTANCE_ID
+          if [[ "$INSTANCE_ID" == "None" || -z "$INSTANCE_ID" ]]; then
+            echo "Instance not found!"
+            exit 1
+          fi
+
+          echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_OUTPUT
+          echo "Found Instance: $INSTANCE_ID"
+
+      - name: Reboot Instance
+        run: |
+          echo "Rebooting: ${{ steps.get_instance.outputs.INSTANCE_ID }}"
+          aws ec2 reboot-instances --instance-ids ${{ steps.get_instance.outputs.INSTANCE_ID }}
+
