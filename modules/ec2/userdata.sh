@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "user_data" > /var/lib/cloud/instance/sem/config_scripts_user
-
 exec > >(tee /var/log/userdata.log|logger -t userdata) 2>&1
 
 echo "Starting user data script..."
@@ -70,4 +68,4 @@ EOF
 # Make deploy script executable
 chmod +x /opt/app/deploy.sh
 
-/opt/app/deploy.sh
+echo "User-data completed successfully"
