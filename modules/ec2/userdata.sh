@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -eux
 exec > >(tee /var/log/userdata.log|logger -t userdata) 2>&1
 
 echo "Starting user data script..."
@@ -23,16 +23,9 @@ chmod 755 /opt/app
 # Creating the deploy.sh script
 cat << 'EOF' > /opt/app/deploy.sh
 #!/bin/bash
-set -e
+set -eux
 
 echo "Starting Deployment at $(date)"
-
-# Env Vars passed from GitHub Actions:
-# GHCR_USER
-# GHCR_TOKEN
-# BACKEND_IMAGE
-# FRONTEND_IMAGE
-# DB_HOST / DB_USER / DB_PASS
 
 echo "Logging into GHCR..."
 echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
