@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -ex
 
 dnf update -y
 dnf install docker -y
