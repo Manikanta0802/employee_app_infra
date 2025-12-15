@@ -11,13 +11,13 @@ resource "aws_instance" "app_server" {
   }
 
   user_data = templatefile("${path.module}/userdata.sh", {
-  backend_image = var.backend_image
-  frontend_image = var.frontend_image
-  db_host       = var.db_host
-  db_port       = var.db_port
-  db_name       = var.db_name
-  db_user       = var.db_user
-  db_password   = var.db_password
+  BACKEND_IMAGE = var.backend_image
+  FRONTEND_IMAGE = var.frontend_image
+  DB_HOST       = var.db_host
+  DB_PORT       = var.db_port
+  DB_NAME       = var.db_name
+  DB_USER       = var.db_user
+  DB_PASS   = var.db_password
   })
 
 

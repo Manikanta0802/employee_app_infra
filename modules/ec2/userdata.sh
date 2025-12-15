@@ -47,7 +47,7 @@ docker rm employee-backend || true
 docker run -d \
   --name employee-backend \
   -p 8080:8080 \
-  -e SPRING_DATASOURCE_URL="jdbc:mysql://${DB_HOST}:3306/employee_availability" \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://${DB_HOST}/employee_availability" \
   -e SPRING_DATASOURCE_USERNAME="${DB_USER}" \
   -e SPRING_DATASOURCE_PASSWORD="${DB_PASS}" \
   --restart=always \
