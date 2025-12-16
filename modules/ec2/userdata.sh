@@ -11,6 +11,7 @@ echo "===== USER-DATA STARTED ====="
 ########################################
 dnf update -y
 dnf install -y docker
+dnf install -y mysql-community-client --nogpgcheck
 
 systemctl enable docker
 systemctl start docker
