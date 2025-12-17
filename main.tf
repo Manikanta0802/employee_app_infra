@@ -51,7 +51,7 @@ module "monitor_ec2" {
   public_subnet_id  = module.vpc.public_subnet_ids[1]
   monitor_sg_id     = module.security_groups.monitor_sg_id
   monitor_ami_id            = var.monitor_ami_id
-  app_private_ip    = module.app_ec2.app_ec2_private_ip
+  app_private_ip    = module.ec2.app_ec2_private_ip
   n8n_private_ip    = module.n8n_ec2.n8n_private_ip
   key_pair_name     = var.key_pair_name
   depends_on = [module.ec2, module.n8n_ec2]
