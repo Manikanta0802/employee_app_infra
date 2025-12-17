@@ -16,3 +16,7 @@ output "rds_sg_id" {
 output "monitor_sg_id" {
   value = aws_security_group.monitor_sg.id
 }
+
+output "n8n_sg_id" {
+  value = aws_security_group.n8n_sg.id
+}
