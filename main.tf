@@ -59,7 +59,7 @@ module "monitor_ec2" {
 
 # EC2 n8n Server
 module "n8n_ec2" {
-  source = "./modules/n8n-ec2"
+  source = "./modules/n8n_ec2"
 
   ami_id           = var.n8n_ami_id
   instance_type    = "t3.micro"
