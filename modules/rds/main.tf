@@ -15,7 +15,7 @@ resource "aws_db_instance" "my_db" {
   allocated_storage      = 20
   storage_type           = "gp2"
 
-  db_name                = "employees"
+  db_name                = "employee_availability"
   username               = var.db_master_username
   password               = var.db_master_password
 
