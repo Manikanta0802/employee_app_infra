@@ -4,7 +4,7 @@ output "app_public_ip" {
 }
 
 output "app_url" {
-  value       = "http://${module.ec2.ec2_public_ip}:8080"
+  value       = "http://${module.ec2.ec2_public_ip}:80"
   description = "App URL (Spring Boot default port)"
 }
 
