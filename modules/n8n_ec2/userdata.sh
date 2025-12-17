@@ -12,11 +12,15 @@ systemctl enable docker
 # Create n8n data directory
 mkdir -p /opt/n8n
 
-# Run n8n
+
 docker run -d \
   --name n8n \
   -p 5678:5678 \
-  -v /opt/n8n:/home/node/.n8n \
+  -e N8N_HOST=0.0.0.0 \
+  -e N8N_PORT=5678 \
+  -e N8N_PROTOCOL=http \
   -e N8N_BASIC_AUTH_ACTIVE=false \
+  -v /opt/n8n:/home/node/.n8n \
+  -e GENERIC_TIMEZONE=Asia/Kolkata \
   --restart unless-stopped \
   n8nio/n8n

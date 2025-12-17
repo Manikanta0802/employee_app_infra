@@ -169,6 +169,13 @@ resource "aws_security_group" "n8n_sg" {
     protocol        = "tcp"
     security_groups = [aws_security_group.monitor_sg.id]
   }
+  ingress {
+    description = "SSH Access"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.my_ip_cidr]
+  }
 
   # Optional: UI access from your IP (demo)
   ingress {
