@@ -18,8 +18,13 @@ resource "aws_security_group" "ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "App access"
   }
-
-  # Allow App access (Spring Boot on port 8080)
+  ingress {
+  from_port   = 9100
+  to_port     = 9100
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  description = "Node Exporter metrics"
+  }
   ingress {
     from_port   = 8080
     to_port     = 8080
@@ -131,6 +136,13 @@ resource "aws_security_group" "monitor_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+  description = "Alertmanager UI"
+  from_port   = 9093
+  to_port     = 9093
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"] # PoC
+  }
 
   egress {
     from_port   = 0
@@ -141,5 +153,39 @@ resource "aws_security_group" "monitor_sg" {
 
   tags = {
     Name = "MiniProject_MonitorSG"
+  }
+}
+
+
+resource "aws_security_group" "n8n_sg" {
+  name        = "n8n-sg"
+  description = "Allow Alertmanager and UI access"
+  vpc_id      = var.vpc_id
+
+  # Allow Alertmanager webhook
+  ingress {
+    from_port       = 5678
+    to_port         = 5678
+    protocol        = "tcp"
+    security_groups = [var.monitoring_sg_id]
+  }
+
+  # Optional: UI access from your IP (demo)
+  ingress {
+    from_port   = 5678
+    to_port     = 5678
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "n8n-sg"
   }
 }

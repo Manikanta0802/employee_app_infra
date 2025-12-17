@@ -35,3 +35,8 @@ variable "monitor_ami_id" {
   default     = "ami-00ca570c1b6d79f36"
 }
 
+variable "n8n_ami_id" {
+  type        = string
+  default     = "ami-00ca570c1b6d79f36"
+}
+

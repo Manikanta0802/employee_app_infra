@@ -1,8 +1,6 @@
 #testing-1
 
-###############################
 # VPC Module
-###############################
 module "vpc" {
   source             = "./modules/vpc"
   aws_region         = var.aws_region
@@ -10,18 +8,15 @@ module "vpc" {
   public_subnet_cidr = ["10.0.1.0/24", "10.0.2.0/24"]
 }
 
-###############################
 # Security Groups
-###############################
 module "security_groups" {
   source     = "./modules/security_groups"
   vpc_id     = module.vpc.vpc_id
   my_ip_cidr = var.my_ip_cidr
 }
 
-###############################
+
 # RDS (using PUBLIC subnet IDs)
-###############################
 module "rds" {
   source             = "./modules/rds"
   public_subnet_ids  = module.vpc.public_subnet_ids
@@ -30,9 +25,8 @@ module "rds" {
   db_master_password = var.db_master_password
 }
 
-###############################
+
 # EC2 App Server
-###############################
 module "ec2" {
   source           = "./modules/ec2"
   public_subnet_id = module.vpc.public_subnet_ids[0]
@@ -50,20 +44,31 @@ module "ec2" {
   db_password = var.db_master_password
 }
 
-###############################
+
 # EC2 Monitor Server
-###############################
 module "monitor_ec2" {
   source            = "./modules/monitor_ec2"
   public_subnet_id  = module.vpc.public_subnet_ids[1]
   monitor_sg_id     = module.security_groups.monitor_sg_id
   monitor_ami_id            = var.monitor_ami_id
+  app_private_ip    = module.app_ec2.app_ec2_private_ip
   key_pair_name     = var.key_pair_name
 }
 
-###############################
+
+# EC2 n8n Server
+module "n8n_ec2" {
+  source = "./modules/n8n-ec2"
+
+  ami_id           = var.n8n_ami_id
+  instance_type    = "t3.micro"
+  subnet_id        = module.vpc.private_subnet_ids[0]
+  security_group_id = module.security_groups.n8n_sg_id
+  key_name         = var.key_pair_name
+}
+
+
 # ALB
-###############################
 module "alb" {
   source            = "./modules/alb"
   vpc_id            = module.vpc.vpc_id

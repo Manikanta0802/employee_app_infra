@@ -6,3 +6,7 @@ output "ec2_public_ip" {
 output "ec2_instance_id" {
   value = aws_instance.app_server.id
 }
+
+output "app_ec2_private_ip" {
+  value = aws_instance.app.private_ip
+}

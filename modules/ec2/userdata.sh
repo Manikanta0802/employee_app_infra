@@ -12,8 +12,10 @@ echo "===== USER-DATA STARTED ====="
 dnf update -y
 dnf install -y docker
 
+
 systemctl enable docker
 systemctl start docker
+
 
 ########################################
 # Enable SSM Agent (AL2023 already has it)
@@ -58,9 +60,11 @@ docker pull "$BACKEND_IMAGE"
 
 docker stop employee-backend || true
 docker rm employee-backend || true
+docker network create employee-net
 
 docker run -d \
   --name employee-backend \
+  --network employee-net \
   -p 8080:8080 \
   -e SPRING_DATASOURCE_URL="jdbc:mysql://${DB_HOST}/employee_availability" \
   -e SPRING_DATASOURCE_USERNAME="$DB_USER" \
@@ -78,9 +82,20 @@ docker rm employee-frontend || true
 
 docker run -d \
   --name employee-frontend \
+  --network employee-net \
   -p 80:80 \
   --restart=always \
   "$FRONTEND_IMAGE"
+
+########################################
+# node exporter
+########################################
+docker run -d \
+  --name node-exporter \
+  --network employee-net \
+  -p 9100:9100 \
+  --restart unless-stopped \
+  prom/node-exporter
 
 echo "===== DEPLOYMENT COMPLETED ====="
 EOF
