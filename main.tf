@@ -53,6 +53,7 @@ module "monitor_ec2" {
   monitor_ami_id            = var.monitor_ami_id
   app_private_ip    = module.app_ec2.app_ec2_private_ip
   key_pair_name     = var.key_pair_name
+  depends_on = [module.ec2, module.n8n_ec2]
 }
 
 
