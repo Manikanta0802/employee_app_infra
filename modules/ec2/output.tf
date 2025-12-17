@@ -8,5 +8,5 @@ output "ec2_instance_id" {
 }
 
 output "app_ec2_private_ip" {
-  value = aws_instance.app.private_ip
+  value = aws_instance.app_server.private_ip
 }

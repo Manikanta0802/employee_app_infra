@@ -64,7 +64,7 @@ module "n8n_ec2" {
 
   ami_id           = var.n8n_ami_id
   instance_type    = "t3.micro"
-  subnet_id        = module.vpc.private_subnet_ids[0]
+  subnet_id        = module.vpc.public_subnet_ids[1]
   security_group_id = module.security_groups.n8n_sg_id
   key_name         = var.key_pair_name
 }

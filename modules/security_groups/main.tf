@@ -167,7 +167,7 @@ resource "aws_security_group" "n8n_sg" {
     from_port       = 5678
     to_port         = 5678
     protocol        = "tcp"
-    security_groups = [var.monitoring_sg_id]
+    security_groups = [aws_security_group.monitor_sg.id]
   }
 
   # Optional: UI access from your IP (demo)
