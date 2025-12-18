@@ -24,8 +24,6 @@ variable "docker_image" {
   default     = ""
 }
 
-
-
 variable "GHCR_TOKEN" {
   type = string
 }

@@ -18,6 +18,8 @@ resource "aws_instance" "app_server" {
   DB_NAME       = var.db_name
   DB_USER       = var.db_user
   DB_PASS   = var.db_password
+  GHCR_USER = var.GHCR_USER
+  GHCR_TOKEN = var.GHCR_TOKEN
   })
 
 
