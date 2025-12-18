@@ -40,3 +40,11 @@ variable "n8n_ami_id" {
   default     = "ami-00ca570c1b6d79f36"
 }
 
+
+variable "GHCR_TOKEN" {
+  type = string
+}
+
+variable "GHCR_USER" {
+  type = string
+}

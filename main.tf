@@ -34,10 +34,11 @@ module "ec2" {
   app_ami_id           = var.app_ami_id
   key_pair_name    = var.key_pair_name
 
-  backend_image = "ghcr.io/manikanta0802/employee-backend:5"
-  frontend_image = "ghcr.io/manikanta0802/employee-frontend:5"
-
-  db_host     = module.rds.rds_endpoint
+  backend_image = "ghcr.io/manikanta0802/employee-backend:latest"
+  frontend_image = "ghcr.io/manikanta0802/employee-frontend:latest"
+  GHCR_USER   = var.GHCR_USER
+  GHCR_TOKEN  = var.GHCR_TOKEN
+  db_host     = module.rds.rds_address
   db_port     = 3306
   db_name     = "employee_availability"
   db_user     = var.db_master_username

@@ -3,6 +3,11 @@ output "rds_endpoint" {
   value       = aws_db_instance.my_db.endpoint
 }
 
+output "rds_address" {
+  description = "Full address for the MySQL database"
+  value       = aws_db_instance.my_db.address
+}
+
 output "rds_instance_id" {
   description = "Identifier of the RDS instance"
   value       = aws_db_instance.my_db.identifier
