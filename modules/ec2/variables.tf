@@ -25,6 +25,15 @@ variable "docker_image" {
 }
 
 
+
+variable "GHCR_TOKEN" {
+  type = string
+}
+
+variable "GHCR_USER" {
+  type = string
+}
+
 variable "backend_image" {
   type = string
 }
