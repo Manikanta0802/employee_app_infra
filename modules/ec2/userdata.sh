@@ -61,7 +61,7 @@ docker pull "$BACKEND_IMAGE"
 
 docker stop employee-backend || true
 docker rm employee-backend || true
-docker network create employee-net
+docker network create employee-net || true
 
 docker run -d \
   --name employee-backend \

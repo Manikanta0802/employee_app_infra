@@ -34,8 +34,8 @@ module "ec2" {
   app_ami_id           = var.app_ami_id
   key_pair_name    = var.key_pair_name
 
-  backend_image = "ghcr.io/manikanta0802/employee-backend:latest"
-  frontend_image = "ghcr.io/manikanta0802/employee-frontend:latest"
+  backend_image = "ghcr.io/manikanta0802/employee-backend:30"
+  frontend_image = "ghcr.io/manikanta0802/employee-frontend:30"
   GHCR_USER   = var.GHCR_USER
   GHCR_TOKEN  = var.GHCR_TOKEN
   db_host     = module.rds.rds_address
