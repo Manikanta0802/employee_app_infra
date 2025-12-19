@@ -12,6 +12,7 @@ systemctl enable docker
 # Create directories
 mkdir -p /opt/monitoring/prometheus/rules
 mkdir -p /opt/monitoring/grafana/provisioning/dashboards
+mkdir -p /opt/monitoring/grafana/provisioning/datasources
 mkdir -p /opt/monitoring/grafana/dashboards
 mkdir -p /opt/monitoring/alertmanager
 
@@ -124,6 +125,18 @@ providers:
       path: /var/lib/grafana/dashboards
 EOF
 
+
+cat <<EOF > /opt/monitoring/grafana/provisioning/datasources/prometheus.yml
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+EOF
 
 docker network create employee-mon || true
 
