@@ -12,7 +12,7 @@ variable "my_ip_cidr" {
 variable "db_master_username" {
   type        = string
   description = "Master username for MySQL"
-  default     = "admin"
+  default     = "attendance_user"
 }
 
 variable "db_master_password" {
