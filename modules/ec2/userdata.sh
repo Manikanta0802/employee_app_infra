@@ -70,8 +70,8 @@ docker run -d \
   -e SPRING_DATASOURCE_URL="jdbc:mysql://${DB_HOST}/employee_attendance_db" \
   -e SPRING_DATASOURCE_USERNAME="$DB_USER" \
   -e SPRING_DATASOURCE_PASSWORD="$DB_PASS" \
-  -e SPRING_JPA_HIBERNATE_DDL_AUTO: update \
-  -e SPRING_JPA_SHOW_SQL: "true"\
+  -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
+  -e SPRING_JPA_SHOW_SQL=true \
   --restart=always \
   "$BACKEND_IMAGE"
 
