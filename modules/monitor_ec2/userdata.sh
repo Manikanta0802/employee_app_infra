@@ -34,7 +34,7 @@ curl -L https://grafana.com/api/dashboards/6756/revisions/2/download \
 # ---------------------------
 cat <<EOF > /opt/monitoring/prometheus/prometheus.yml
 global:
-  scrape_interval: 15s
+  scrape_interval: 5s
 
 alerting:
   alertmanagers:
@@ -46,6 +46,10 @@ scrape_configs:
     metrics_path: "/actuator/prometheus"
     static_configs:
       - targets: ["${app_private_ip}:8080"]
+  - job_name: "angular"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["${app_private_ip}:80"]
   - job_name: "node"
     static_configs:
       - targets: ["${app_private_ip}:9100"]
@@ -64,15 +68,23 @@ groups:
     rules:
       - alert: AppDown
         expr: up{job="spring-app"} == 0
-        for: 30s
+        for: 5s
         labels:
           severity: critical
         annotations:
           description: "Spring Boot Application is DOWN"
 
+      - alert: FrontendDown
+        expr: up{job="angular"} == 0
+        for: 5s
+        labels:
+          severity: critical
+        annotations:
+          description: "Angular Frontend Application is DOWN"
+
       - alert: NodeDown
         expr: up{job="node"} == 0
-        for: 30s
+        for: 5s
         labels:
           severity: critical
         annotations:
@@ -80,7 +92,7 @@ groups:
 
       - alert: HighCPUUsage
         expr: (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[2m]))) * 100 > 80
-        for: 1m
+        for: 5s
         labels:
           severity: warning
         annotations:
@@ -88,7 +100,7 @@ groups:
 
       - alert: HighMemoryUsage
         expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 75
-        for: 1m
+        for: 5s
         labels:
           severity: warning
         annotations:
